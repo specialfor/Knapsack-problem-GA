@@ -14,8 +14,8 @@ class Knapsack:
 
     tour_part_count = 5  # кількість хромосом, котрі беруть участь в селекції
 
-    epoch_count = 200  # кількість популяцій
-    chrom_count = 100  # кількість хромосом
+    epoch_count = 30  # кількість популяцій
+    chrom_count = 50  # кількість хромосом
 
     chrom_length = 0  # кількість геній в хромосомі
     chroms = []  # масив хромосом
@@ -23,11 +23,13 @@ class Knapsack:
     stuff = []  # масив речей
     max_weight = 0  # максимальна вага, котру може витримати ранець
 
+    statistics = []
 
     def __init__(self):
         self.chroms = []
         for i in range(0, self.chrom_count):
             self.chroms.append(None)
+
 
     def find_solution(self, stuff, max_weight):
         self.stuff = stuff
@@ -48,10 +50,12 @@ class Knapsack:
         """
         Реалізовує генетичний алгоритм
         """
+        self.statistics = []
         self.__generate_start_population()  # генерація початкової популяції
 
         for i in range(0, self.epoch_count):
             self.__calculate_fitnesses()  # обчислення здоров'я популяції
+            self.statistics.append(self.avg_fitness())
             self.__select_next_population()  # генерація нового покоління
 
 
@@ -184,3 +188,9 @@ class Knapsack:
                 selected_stuff.append(self.stuff[i])
 
         return selected_stuff
+
+    def avg_fitness(self):
+        sum = 0
+        for chrom in self.chroms:
+            sum += chrom.fitness
+        return sum / self.chrom_count
