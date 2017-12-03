@@ -110,8 +110,8 @@ class Chromosome:
 
         for i in range(0, length):
             if is_int:
-                chromosome.gens[i] = random.randint(min_value, max_value)
+                chromosome.gens.append(random.randint(min_value, max_value))
             else:
-                chromosome.gens[i] = random.uniform(min_value, max_value)
+                chromosome.gens.append(random.uniform(min_value, max_value))
 
         return chromosome
