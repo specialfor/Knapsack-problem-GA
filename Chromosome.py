@@ -1,6 +1,7 @@
 import random
 from copy import deepcopy
 
+
 class Chromosome:
     """
     Цей клас моделює хромосому
@@ -24,7 +25,6 @@ class Chromosome:
         """
         return self.gens[index]
 
-
     def __setitem__(self, index, gen):
         """
         Замінює ген за індексом
@@ -34,6 +34,12 @@ class Chromosome:
         self.gens[index] = gen
 
 
+    def __len__(self):
+        """
+        :return: кількість генів в хромосомі
+        """
+        return len(self.gens)
+
     # Схрещення
     def __random_cross_line(self):
         """
@@ -41,7 +47,6 @@ class Chromosome:
         :return: номер гена після якого відбудиться схрещення
         """
         return random.randint(0, len(self.gens) - 2)
-
 
     def single_crossover(self, second_chrom):
         """
@@ -72,7 +77,6 @@ class Chromosome:
 
         return [first_child, second_child]
 
-
     # Мутація
     def mutate(self, likelihood):
         """
@@ -84,7 +88,6 @@ class Chromosome:
             if rand <= likelihood:
                 self.__mutate_gen(i)
 
-
     def __mutate_gen(self, gen_index):
         """
         Мутує ген за індексом
@@ -94,10 +97,9 @@ class Chromosome:
         while new_gen == self[gen_index]:
             new_gen = random.randint
 
-
     # Генерація хромосоми
-    @staticmethod
-    def generate_chromosome(length, min_value, max_value, is_int):
+    @classmethod
+    def generate_chromosome(cls, length, min_value, max_value, is_int):
         """
         Генерує випадкову хромосому
         :param length: кількість генів
@@ -107,11 +109,14 @@ class Chromosome:
         :return:
         """
         chromosome = Chromosome(min_value, max_value)
+        chromosome.gens = []
+        for i in range(0, length):
+            chromosome.gens.append(None)
 
         for i in range(0, length):
             if is_int:
-                chromosome.gens.append(random.randint(min_value, max_value))
+                chromosome[i] = random.randint(min_value, max_value)
             else:
-                chromosome.gens.append(random.uniform(min_value, max_value))
+                chromosome[i] = random.uniform(min_value, max_value)
 
         return chromosome

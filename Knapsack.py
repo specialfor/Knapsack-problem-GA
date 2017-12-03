@@ -10,12 +10,12 @@ class Knapsack:
     Для селекції використовується турнірний метод.
     """
 
-    mutation_p = 5  # у відсотках
+    mutation_p = .5  # у відсотках
 
     tour_part_count = 5  # кількість хромосом, котрі беруть участь в селекції
 
-    pop_count = 200  # кількість популяцій
-    chrom_count = 8  # кількість хромосом
+    epoch_count = 200  # кількість популяцій
+    chrom_count = 100  # кількість хромосом
 
     chrom_length = 0  # кількість геній в хромосомі
     chroms = []  # масив хромосом
@@ -23,27 +23,25 @@ class Knapsack:
     stuff = []  # масив речей
     max_weight = 0  # максимальна вага, котру може витримати ранець
 
-    best_chrom = None
 
-
-    def __init__(self, chrom_count):
-        self.chrom_count = chrom_count
-
+    def __init__(self):
+        self.chroms = []
+        for i in range(0, self.chrom_count):
+            self.chroms.append(None)
 
     def find_solution(self, stuff, max_weight):
         self.stuff = stuff
-        self.chrom_length = len(stuff)
-
         self.max_weight = max_weight
+        self.chrom_length = len(self.stuff)
 
-        self.__perform_algorithm() # запускаємо генетичний алгоритм
+        self.__perform_algorithm()  # запускаємо генетичний алгоритм
 
         best_chrom = self.__find_best_chrom()  # знаходимо найкращий розв'язок
-        selected_stuff = self.__selected_stuff(best_chrom)
+        solution = SolutionInfo(best_chrom, self.stuff)
 
         self.stuff = []
 
-        return selected_stuff
+        return solution
 
 
     def __perform_algorithm(self):
@@ -52,7 +50,7 @@ class Knapsack:
         """
         self.__generate_start_population()  # генерація початкової популяції
 
-        for i in range(0, self.pop_count):
+        for i in range(0, self.epoch_count):
             self.__calculate_fitnesses()  # обчислення здоров'я популяції
             self.__select_next_population()  # генерація нового покоління
 
@@ -70,15 +68,9 @@ class Knapsack:
         """
         Обчислює показники здоров'я для всіх хромосом
         """
-
-        # max_index = 0
         for i in range(0, len(self.chroms)):
             chrom = self.chroms[i]
             chrom.fitness = self.__calculate_fitness(chrom)
-        #     if chrom.fitness >= self.chroms[max_index]:
-        #         max_index = i
-        #
-        # self.sol_info = SolutionInfo(self.chroms[max_index], )
 
 
     def __calculate_fitness(self, chrom):
